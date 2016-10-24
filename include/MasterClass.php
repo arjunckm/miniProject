@@ -111,7 +111,7 @@ class MasterClass
 
         $sql="";
         foreach ($getlist as $key => $value) {                      
-           $sql.="SELECT COUNT(status) as noofstudent FROM `students_details_me` WHERE start_year='$value'";
+           $sql.="SELECT COUNT(status) as noofstudent, start_year  FROM `students_details_me` WHERE start_year='$value'";
            if($key==(count($getlist)-1)){
                 $sql.="";
             }else{
