@@ -32,15 +32,15 @@
   <div class="form-group label-floating">
       <label for="listofdata" class="">Select Data List</label><br/>
       <select id="listofdata" class="form-control ">
-        <option value="">Select Option</option>
-        <option value="status">Status</option>
-        <option value="genderratio">Gender Ratio</option>
-        <option value="resultall">All Result (Final Totals)</option>
-        <option value="oddevenenroll">Odd/Even Sem Enroll Ratio</option>
-        <option value="yearenroll">Student Enrollment by Year</option>        
+        <option value="" data-btn="dataType">Select Option</option>
+        <option value="status" data-btn="dataType">Status</option>
+        <option value="genderratio" data-btn="dataType">Gender Ratio</option>
+        <option value="resultall" data-btn="dataType">All Result (Final Totals)</option>
+        <option value="oddevenenroll" data-btn="dataType">Odd/Even Sem Enroll Ratio</option>
+        <option value="yearenroll" data-btn="yearenrolls">Student Enrollment by Year</option>        
       </select>
   </div>
-  <div class="form-group" style="margin-left:20px">
+  <div class="form-group" style="margin-left:20px" >
       <label>Select Chart type</label><br/>
       <button class="btn btn-raised btn-primary dataType" value="line">Line Chart</button>
       <button class="btn btn-raised btn-success dataType" value="bar">Bar Chart</button>
@@ -48,17 +48,8 @@
       <button class="btn btn-raised btn-danger dataType" value="pie">Pie Chart</button>
       <button class="btn btn-raised btn-warning dataType" value="donut">Donut Chart</button>
       <button class="btn btn-raised btn-primary dataType" value="gauge">Gauge Chart</button>
-      <!-- <input type="radio" class="dataType" name="dataType" value="line"/>Line <br/>
-      <input type="radio" class="dataType" name="dataType" value="spline"/>spline
-      <input type="radio" class="dataType" name="dataType" value="step"/>step
-      <input type="radio" class="dataType" name="dataType" value="area"/>area
-      <input type="radio" class="dataType" name="dataType" value="area-spline"/>area-spline
-      <input type="radio" class="dataType" name="dataType" value="area-step"/>area-step
-      <input type="radio" class="dataType" name="dataType" value="bar"/>Bar Graph<br/>
-      <input type="radio" class="dataType" name="dataType" value="scatter"/>Scatter View<br/>
-      <input type="radio" class="dataType" name="dataType" value="pie"/>Pie Chart<br/>
-      <input type="radio" class="dataType" name="dataType" value="donut"/>Donut Look<br/>
-      <input type="radio" class="dataType" name="dataType" value="gauge"/>Gauge<br/> -->
+      <button class="btn btn-raised btn-primary yearenrolls" value="plotyear">Plot year wise</button>      
+      <button class="btn btn-raised btn-primary yearenrolls" value="plotaddmission">Plot Admission wise</button>      
   </div>
   
 </div>
@@ -69,6 +60,20 @@
 
 </div>
 <script type="text/javascript">
+$('.dataType,.yearenrolls').hide();
+$('#listofdata').change(function(){
+
+	var listdata=$("#listofdata :selected").attr('data-btn');	
+	if(listdata=="dataType"){
+		$('.dataType').show();
+		$('.yearenrolls').hide();
+	}else if(listdata=="yearenrolls"){
+		$('.dataType').hide();
+		$('.yearenrolls').show();
+	}
+});
+
+
 $(".dataType").click(function(){
   var datalist=$("#listofdata").val();
   dataType=$(this).val();
@@ -150,6 +155,7 @@ $(".dataType").click(function(){
     d3.json("response.php?data=oddevenEnroll", function(dataRes) {
          data = {};
          val=[];
+         console.log(dataRes);
         dataRes.forEach(function(e) {
             val.push('ODD');
             val.push('EVEN');
@@ -167,32 +173,85 @@ $(".dataType").click(function(){
           }
           });
       });
-  }else if(datalist=="yearenroll"){
-    d3.json("response.php?data=yearenroll", function(dataRes) {
+  }
+}
+});
 
-         data= {};
+$(".yearenrolls").click(function(){
+	var btndata=$(this).val();
+	d3.json("response.php?data=yearenroll", function(dataRes) {
+		console.log(dataRes[0].noofstudent);
+    var valFields = ["noofstudent"];
+    var dataIndexField = "data";
+    var keyField = "start_year";
+    var newMap = {}; 
+    var key;
+    dataRes.forEach (function (d) {
+    	if(btndata=="plotaddmission"){
+    		key = d[keyField].replace(/_/g," ");
+    	}else if(btndata=="plotyear"){
+    		key = d[keyField].split("_")[1];
+    	}
+                
+        var newObj = newMap[key];
+        if (!newObj) { 
+            newObj =  {key: key};
+            newMap[key] = newObj;
+        }       
+       
+        var dataIndex = d[dataIndexField];
+        valFields.forEach (function (vField) { 
+            newObj[vField] = d[vField];
+        });
+
+    }); 
+    var newJson = d3.values(newMap);
+    var newDataFields = d3.keys(newJson[0]);
+    newDataFields.splice (newDataFields.indexOf("key"), 1);  
+    
+    var chart = c3.generate({
+        data: {
+            json: newJson,
+            keys: {
+                x: 'key',
+                value: newDataFields
+            }
+        },
+      axis: {
+        x: {
+           type: 'category'
+        }
+      }
+    });  
+
+
+
+         /*noofstudent= [];
+         year=[];
+         data={};
          val=[];
-         newarr=[];
-         console.log(dataRes);
 
+        for(var i=0;i<dataRes.length;i++){
+			noofstudent.push(dataRes[i].noofstudent);
+			year.push(dataRes[i].start_year.split("_")[1]);
+      	}
+      	
         dataRes.forEach(function(e) {
             val.push('No. of Students');
-            data['noofstudent']=e.noofstudent;
-            newarr.push(data);
+            val.push('year');
+            data['noofstudent']=noofstudent;
+            data['year']=year;
         });
-        console.log(data);
         var chart = c3.generate({
           data: {
-              json: [ newarr ],
+              json: [ dataRes ],
               keys: {
                   value: val,
               },
               type: dataType
           }
-          });
+          });*/
       });
-  }
-}
 });
 
   
