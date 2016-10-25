@@ -139,5 +139,22 @@ class MasterClass
         return json_encode($dataArray);
     }
 
-    
+    public function getListOfStatesWise(){
+        $query=$this->mysqli->query('SELECT count(state) as stateCount,state  FROM `students_details_me`WHERE state !="" GROUP BY state');
+         $dataArray=array();
+        /* $stateCoutnt=array();
+         $States=array();*/
+        if ($this -> mysqli -> affected_rows > 0) {
+            while ($row = $query -> fetch_array(MYSQLI_ASSOC)) {
+                //$dataArray[$row['state']]=$row['stateCount'];
+
+
+                $stateCoutnt[]=$row['stateCount'];
+                $States[]=$row['state'];
+            }
+        }
+        $dataArray['count']=$stateCoutnt;
+        $dataArray['states']=$States;
+        return json_encode($dataArray);
+    }
 }
