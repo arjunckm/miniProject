@@ -37,6 +37,7 @@
         <option value="genderratio" data-btn="dataType">Gender Ratio</option>
         <option value="resultall" data-btn="dataType">All Result (Final Totals)</option>
         <option value="oddevenenroll" data-btn="dataType">Odd/Even Sem Enroll Ratio</option>
+        <option value="statewiselist" data-btn="dataType">state wise list of Students</option>
         <option value="yearenroll" data-btn="yearenrolls">Student Enrollment by Year</option>        
       </select>
   </div>
@@ -96,6 +97,7 @@ $(".dataType").click(function(){
             data['INCOMPLETE'] = e.INCOMPLETE;
             data['EXPIRED'] = e.EXPIRED;
         });
+        console.log(data);
         var chart = c3.generate({
           data: {
               json: [ data ],
@@ -103,6 +105,9 @@ $(".dataType").click(function(){
                   value: val,
               },
               type: dataType
+          },
+          tooltip: {
+              grouped: false
           }
           });
       });
@@ -123,6 +128,9 @@ $(".dataType").click(function(){
                   value: val,
               },
               type: dataType
+          },
+          tooltip: {
+              grouped: false
           }
           });
       });
@@ -148,6 +156,9 @@ $(".dataType").click(function(){
                   value: val,
               },
               type: dataType
+          },
+          tooltip: {
+              grouped: false
           }
           });
       });
@@ -170,6 +181,36 @@ $(".dataType").click(function(){
                   value: val,
               },
               type: dataType
+          },
+          tooltip: {
+              grouped: false
+          }
+          });
+      });
+  }else if(datalist=="statewiselist"){
+    d3.json("response.php?data=statewiselist", function(dataRes) {
+         data = {};
+         val=[];
+         console.log(dataRes);
+         $(dataRes.states).each(function(k,v){
+          console.log(k,v);
+          val.push(v);
+         });
+         $(dataRes.count).each(function(k,v){
+          console.log(k,v);
+          data[dataRes.states[k]]=v;
+         });        
+        console.log(data);
+        var chart = c3.generate({
+          data: {
+              json: [ data ],
+              keys: {
+                  value: val,
+              },
+              type: dataType
+          },
+          tooltip: {
+              grouped: false
           }
           });
       });
@@ -188,7 +229,7 @@ $(".yearenrolls").click(function(){
     var key;
     dataRes.forEach (function (d) {
     	if(btndata=="plotaddmission"){
-    		key = d[keyField].replace(/_/g," ");
+    		key = d[keyField].split("_")[1]+" "+d[keyField].split("_")[0];
     	}else if(btndata=="plotyear"){
     		key = d[keyField].split("_")[1];
     	}
@@ -217,11 +258,14 @@ $(".yearenrolls").click(function(){
                 value: newDataFields
             }
         },
-      axis: {
-        x: {
-           type: 'category'
+        zoom: {
+            enabled: true
+        },
+        axis: {
+          x: {
+             type: 'category'
+          }
         }
-      }
     });  
 
 
