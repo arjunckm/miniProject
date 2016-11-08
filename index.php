@@ -16,6 +16,13 @@
   <script type="text/javascript" src="js/ripples.js"></script>
 
 </head>
+<style type="text/css">
+body
+ {
+     background-image: url(images/123.jpg);
+     background-repeat: no-repeat;
+ }
+ </style>
 <body>
 <div class="container">
 <div class="col-md-12" style="top:15px">
@@ -37,8 +44,9 @@
         <option value="genderratio" data-btn="dataType">Gender Ratio</option>
         <option value="resultall" data-btn="dataType">All Result (Final Totals)</option>
         <option value="oddevenenroll" data-btn="dataType">Odd/Even Sem Enroll Ratio</option>
-        <option value="statewiselist" data-btn="dataType">state wise list of Students</option>
-        <option value="yearenroll" data-btn="yearenrolls">Student Enrollment by Year</option>        
+        <option value="statewiselist" data-btn="dataType">State wise list of Students</option>
+        <option value="yearenroll" data-btn="yearenrolls">Student Enrollment by Year</option>  
+        <option value="statewiselistMap" data-btn="statewiselistMap">State wise list of Students - Map</option>     
       </select>
   </div>
   <div class="form-group" style="margin-left:20px" >
@@ -71,6 +79,8 @@ $('#listofdata').change(function(){
 	}else if(listdata=="yearenrolls"){
 		$('.dataType').hide();
 		$('.yearenrolls').show();
+	}else if(listdata=="statewiselistMap"){
+		window.location='mapData.html';
 	}
 });
 

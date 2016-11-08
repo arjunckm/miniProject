@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Map Visualizzation</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/mapdata/countries/in/custom/in-all-disputed.js"></script>
+<style type="text/css">
+	#container {
+    height: 500px; 
+    min-width: 310px; 
+    max-width: 800px; 
+    margin: 0 auto; 
+}
+.loading {
+    margin-top: 10em;
+    text-align: center;
+    color: gray;
+}
+
+</style>
+</head>
+<body>
+<div id="container"></div>
+
+<script type="text/javascript">
+	
+	$(function () {
+
+    // Prepare demo data
+    var data = [
+        {
+            "hc-key": "in-an",
+            "value": 0
+        },
+        {
+            "hc-key": "in-wb",
+            "value": 17
+        },
+        {
+            "hc-key": "in-ld",
+            "value": 0
+        },
+        {
+            "hc-key": "in-5390",
+            "value": 0
+        },
+        {
+            "hc-key": "in-py",
+            "value": 0
+        },
+        {
+            "hc-key": "in-3464",
+            "value": 0
+        },
+        {
+            "hc-key": "in-mz",
+            "value": 0
+        },
+        {
+            "hc-key": "in-as",
+            "value": 2
+        },
+        {
+            "hc-key": "in-pb",
+            "value": 25
+        },
+        {
+            "hc-key": "in-ga",
+            "value": 9
+        },
+        {
+            "hc-key": "in-2984",
+            "value": 10
+        },
+        {
+            "hc-key": "in-jk",
+            "value": 11
+        },
+        {
+            "hc-key": "in-hr",
+            "value": 12
+        },
+        {
+            "hc-key": "in-nl",
+            "value": 13
+        },
+        {
+            "hc-key": "in-mn",
+            "value": 14
+        },
+        {
+            "hc-key": "in-tr",
+            "value": 15
+        },
+        {
+            "hc-key": "in-mp",
+            "value": 16
+        },
+        {
+            "hc-key": "in-ct",
+            "value": 17
+        },
+        {
+            "hc-key": "in-ar",
+            "value": 18
+        },
+        {
+            "hc-key": "in-ml",
+            "value": 19
+        },
+        {
+            "hc-key": "in-kl",
+            "value": 20
+        },
+        {
+            "hc-key": "in-tn",
+            "value": 21
+        },
+        {
+            "hc-key": "in-ap",
+            "value": 292
+        },
+        {
+            "hc-key": "in-ka",
+            "value": 1019
+        },
+        {
+            "hc-key": "in-mh",
+            "value": 35
+        },
+        {
+            "hc-key": "in-or",
+            "value": 28
+        },
+        {
+            "hc-key": "in-dn",
+            "value": 26
+        },
+        {
+            "hc-key": "in-dl",
+            "value": 20
+        },
+        {
+            "hc-key": "in-hp",
+            "value": 28
+        },
+        {
+            "hc-key": "in-rj",
+            "value": 29
+        },
+        {
+            "hc-key": "in-up",
+            "value": 30
+        },
+        {
+            "hc-key": "in-ut",
+            "value": 31
+        },
+        {
+            "hc-key": "in-jh",
+            "value": 32
+        },
+        {
+            "hc-key": "in-ch",
+            "value": 33
+        },
+        {
+            "hc-key": "in-br",
+            "value": 34
+        },
+        {
+            "hc-key": "in-sk",
+            "value": 35
+        }
+    ];
+
+    // Initiate the chart
+    $('#container').highcharts('Map', {
+
+        title : {
+            text : 'State Wise list of Students'
+        },
+
+        
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+
+        colorAxis: {
+            min: 0
+        },
+
+        series : [{
+            data : data,
+            mapData: Highcharts.maps['countries/in/custom/in-all-disputed'],
+            joinBy: 'hc-key',
+            name: 'Random data',
+            states: {
+                hover: {
+                    color: '#BADA55'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}'
+            }
+        }]
+    });
+    
+    $(".highcharts-credits").hide();
+});
+
+</script>
+
+</body>
+</html>
